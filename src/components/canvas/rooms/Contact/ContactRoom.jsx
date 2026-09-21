@@ -414,7 +414,7 @@ const ContactRoom = ({ showRoom, onReady, isExiting, isWarmup }) => {
                 rotation={[0, 0.3, 0]}
                 texturePath="/textures/contact/beczka.webp"
                 label="GITHUB"
-                onClick={() => window.open('http://worldpeace.top', '_blank')}
+                onClick={() => window.open('https://worldpeace.top', '_blank')}
                 paintOnBeforeCompile={onBeforeCompile}
                 paintUniforms={uniformsData}
             />
@@ -434,7 +434,7 @@ const ContactRoom = ({ showRoom, onReady, isExiting, isWarmup }) => {
                 rotation={[0, -0.3, 0]}
                 texturePath="/textures/contact/beczka.webp"
                 label="AI LAB"
-                onClick={() => window.open('http://8.148.28.150:9137', '_blank')}
+                onClick={() => window.open('https://ai.worldpeace.top/', '_blank')}
                 paintOnBeforeCompile={onBeforeCompile}
                 paintUniforms={uniformsData}
             />

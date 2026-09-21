@@ -69,14 +69,16 @@ const GlobalOverlay = () => {
 };
 
 const ContentCard = ({ content, isOpen, onClose, isMobile }) => {
-    if (!content) return null;
+    // 注意：这里不能提前 return —— 下面有十几个 hooks，提前 return 会让
+    // hooks 数量在两次渲染间变化，React 会直接抛 "Rendered fewer hooks" 白屏。
+    // 空值判断挪到了所有 hooks 之后（见 return 之前）。
 
-    const label = content.platformConfig?.label || 'Content';
+    const label = content?.platformConfig?.label || 'Content';
 
     // GSAP TextPlugin typing effect for description
     const descriptionRef = useRef(null);
     useEffect(() => {
-        if (isOpen && content.description && descriptionRef.current && content.layout !== 'certificate_grid') {
+        if (isOpen && content?.description && descriptionRef.current && content?.layout !== 'certificate_grid') {
             gsap.killTweensOf(descriptionRef.current);
             gsap.fromTo(descriptionRef.current,
                 { text: "" },
@@ -237,7 +239,7 @@ const ContentCard = ({ content, isOpen, onClose, isMobile }) => {
     });
 
     // --- KONFIGURACJA MASKI (SPOTLIGHT - CZARNA DZIURA) ---
-    const maskStyle = (content.layout === 'certificate_grid') ? {
+    const maskStyle = (content?.layout === 'certificate_grid') ? {
         maskImage: 'none',
         WebkitMaskImage: 'none'
     } : isMobile ? {
@@ -250,6 +252,9 @@ const ContentCard = ({ content, isOpen, onClose, isMobile }) => {
         maskImage: 'radial-gradient(circle at 31% 50%, transparent 0%, transparent 12%, black 35%)',
         WebkitMaskImage: 'radial-gradient(circle at 31% 50%, transparent 0%, transparent 12%, black 35%)'
     };
+
+    // 所有 hooks 都已执行完毕，这里再判空才安全
+    if (!content) return null;
 
     return (
         <div

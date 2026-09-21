@@ -40,7 +40,7 @@ const FALLBACK_PROJECTS = [
         title: 'AI SECURITY LAB',
         front: '/textures/gallery/ailab_front.webp',
         painted: '/textures/gallery/ailab_painted.webp',
-        url: 'http://8.148.28.150:9137',
+        url: 'https://ai.worldpeace.top/',
         description: 'An AI-powered security learning & practice platform I built. Explore AI-driven penetration testing, automated scanning, and LLM-assisted security analysis in an integrated lab environment.',
         techStack: ['/textures/gallery/jslogo.webp', '/textures/gallery/htmllogo.webp', '/textures/gallery/csslogo.webp', '/textures/gallery/phplogo.webp']
     },
@@ -49,7 +49,7 @@ const FALLBACK_PROJECTS = [
         title: 'SECURITY OPS',
         front: '/textures/gallery/ops_front.webp',
         painted: '/textures/gallery/ops_painted.webp',
-        url: 'http://worldpeace.top/2026/07/21/%E5%AE%89%E5%85%A8%E4%BB%8E%E4%B8%9A%E4%B8%80%E4%B8%AA%E6%9C%88%E8%AE%B0%E5%BD%95/',
+        url: 'https://worldpeace.top/2026/07/21/%E5%AE%89%E5%85%A8%E4%BB%8E%E4%B8%9A%E4%B8%80%E4%B8%AA%E6%9C%88%E8%AE%B0%E5%BD%95/',
         description: 'My first month in a security job: XDR alert analysis, penetration testing, on-site security inspections, and starting to explore AI security. A record of growing from learner to practitioner.',
         techStack: ['/textures/gallery/jslogo.webp', '/textures/gallery/htmllogo.webp', '/textures/gallery/csslogo.webp']
     },
@@ -67,7 +67,7 @@ const FALLBACK_PROJECTS = [
         title: 'WOLF BLOG',
         front: '/textures/gallery/blog_front.webp',
         painted: '/textures/gallery/blog_painted.webp',
-        url: 'http://worldpeace.top',
+        url: 'https://worldpeace.top',
         description: 'My personal tech blog built with Hexo & Butterfly - security writeups, life notes, stories and everything in between. Read the journey from learner to practitioner.',
         techStack: ['/textures/gallery/jslogo.webp', '/textures/gallery/htmllogo.webp', '/textures/gallery/csslogo.webp']
     },

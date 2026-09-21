@@ -16,11 +16,14 @@ import { useDocumentMeta } from './hooks/useDocumentMeta';
 import posthog from 'posthog-js';
 import { loadSanityData } from './hooks/useSanityData';
 
-// Initialize PostHog
-posthog.init(import.meta.env.VITE_POSTHOG_KEY, {
-  api_host: import.meta.env.VITE_POSTHOG_HOST,
-  person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
-});
+// Initialize PostHog（没配 key 就跳过，否则控制台会一直报 "initialized without a token"）
+const POSTHOG_KEY = import.meta.env.VITE_POSTHOG_KEY;
+if (POSTHOG_KEY) {
+  posthog.init(POSTHOG_KEY, {
+    api_host: import.meta.env.VITE_POSTHOG_HOST,
+    person_profiles: 'identified_only',
+  });
+}
 
 // Lazy load the heavy 3D experience
 const Experience = lazy(() => import('./components/canvas/Experience'));

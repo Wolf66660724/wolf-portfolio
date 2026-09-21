@@ -141,13 +141,13 @@ export const GALLERY_TEXTURES_BASE = [
     '/textures/gallery/openliveproject.webp',
 ];
 
+// 画廊项目卡的正面贴图叫 <id>_front.webp，和下面那些没有 _front 后缀的不一样。
+// 之前把它们混在同一个数组里拼 `${name}.webp`，线上会 404（ailab.webp / ops.webp ...）。
+export const GALLERY_PROJECT_IDS = ['ailab', 'ops', 'blog', 'toolkit'];
+
 export const GALLERY_TEXTURES_VERSIONED = [
     // Project cards
-    // Wolf custom project cards
-    'ailab',
-    'ops',
-    'blog',
-    'toolkit',
+    ...GALLERY_PROJECT_IDS,
     // Card back
     'tylkartki',
     'przyciskdotylukartki',
@@ -167,7 +167,9 @@ export const GALLERY_TEXTURES_VERSIONED = [
 export const GALLERY_TEXTURES = [
     ...GALLERY_TEXTURES_BASE,
     ...GALLERY_TEXTURES_VERSIONED.flatMap(name => [
-        `/textures/gallery/${name}.webp`,
+        GALLERY_PROJECT_IDS.includes(name)
+            ? `/textures/gallery/${name}_front.webp`
+            : `/textures/gallery/${name}.webp`,
         name === 'csslogo' ? `/textures/gallery/css3logo_painted.webp` : `/textures/gallery/${name}_painted.webp`
     ])
 ];

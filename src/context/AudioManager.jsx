@@ -78,6 +78,10 @@ export const AudioProvider = ({ children }) => {
     const play = useCallback((soundName, { loop = false, volume = 1.0 } = {}) => {
         // Graceful degradation if files missing
         const soundPaths = {
+            // pencil / tear 原本没有对应音频文件，走下面的兜底会请求不存在的
+            // /sounds/pencil.mp3、/sounds/tear.mp3，线上一直 404。这里用现成的纸张音效代替。
+            'pencil': '/sounds/papersound.mp3',
+            'tear': '/sounds/papersound.mp3',
             'szumwiatru': '/sounds/szumwiatru.mp3', // Szum wiatru w pokoju About
             'szummiasta': '/sounds/szummiasta.mp3', // Szum miasta w pokoju The Gallery
             'uchyleniedrzwi': '/sounds/uchyleniedrzwi.mp3', // Skrzypienie przy najechaniu

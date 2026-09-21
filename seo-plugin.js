@@ -1,5 +1,9 @@
 import { createClient } from '@sanity/client';
 
+// Sanity 已停用（projectId 是占位符 deadbeef）。关掉这个开关后，构建时不再去请求
+// 一个不存在的项目，省掉每次 build 的两轮 404 报错；下面各处都走本地兜底数据。
+const SANITY_ENABLED = false;
+
 const sanityClient = createClient({
     projectId: 'deadbeef', // placeholder — fetch fails, static fallback used
     dataset: 'production',
@@ -41,10 +45,10 @@ function buildJsonLd(globalInfo, projects, studio, awards, faqList) {
     // --- 1. Person: Central node of the Knowledge Graph ---
     const person = {
         '@type': 'Person',
-        '@id': 'http://worldpeace.top/#person',
+        '@id': 'https://portfolio.worldpeace.top/#person',
         name: 'Wolf (茶狼)',
         alternateName: ['Wolf', 'Mr.wolf', '茶狼'],
-        url: 'http://worldpeace.top',
+        url: 'https://portfolio.worldpeace.top',
         jobTitle: 'Full-Stack Developer · Pentester · Security Engineer',
         description: globalInfo?.aboutMe || 'Full-stack developer and security engineer specializing in penetration testing, web development, Linux, and embedded systems.',
         knowsAbout: ['Network Security', 'Penetration Testing', 'Web Development', 'Linux', 'Python', 'Embedded', 'React', 'Three.js', 'WebGL'],
@@ -62,21 +66,21 @@ function buildJsonLd(globalInfo, projects, studio, awards, faqList) {
     // --- 2. WebSite ---
     const website = {
         '@type': 'WebSite',
-        '@id': 'http://worldpeace.top/#website',
-        url: 'http://worldpeace.top',
+        '@id': 'https://portfolio.worldpeace.top/#website',
+        url: 'https://portfolio.worldpeace.top',
         name: globalInfo?.siteTitle || 'Wolf (茶狼) | Full-Stack · Pentest · Security',
         description: globalInfo?.siteDescription || 'Interactive 3D Resume & Portfolio by Wolf (茶狼)',
-        publisher: { '@id': 'https://itomdev.com/#person' }
+        publisher: { '@id': 'https://portfolio.worldpeace.top/#person' }
     };
     graph.push(website);
 
     // --- 3. ProfilePage ---
     const profilePage = {
         '@type': 'ProfilePage',
-        '@id': 'http://worldpeace.top/#profilepage',
-        url: 'http://worldpeace.top',
-        mainEntity: { '@id': 'https://itomdev.com/#person' },
-        about: { '@id': 'https://itomdev.com/#person' }
+        '@id': 'https://portfolio.worldpeace.top/#profilepage',
+        url: 'https://portfolio.worldpeace.top',
+        mainEntity: { '@id': 'https://portfolio.worldpeace.top/#person' },
+        about: { '@id': 'https://portfolio.worldpeace.top/#person' }
     };
     graph.push(profilePage);
 
@@ -84,7 +88,7 @@ function buildJsonLd(globalInfo, projects, studio, awards, faqList) {
     if (faqList && faqList.length > 0) {
         const faqPage = {
             '@type': 'FAQPage',
-            '@id': 'https://itomdev.com/#faq',
+            '@id': 'https://portfolio.worldpeace.top/#faq',
             mainEntity: faqList.map(item => ({
                 '@type': 'Question',
                 name: item.question,
@@ -101,7 +105,7 @@ function buildJsonLd(globalInfo, projects, studio, awards, faqList) {
     if (projects && projects.length > 0) {
         graph.push({
             '@type': 'ItemList',
-            '@id': 'https://itomdev.com/#projectslist',
+            '@id': 'https://portfolio.worldpeace.top/#projectslist',
             name: 'Portfolio Projects by Tomasz "ITom" Szmajda',
             description: 'Selected web development projects showcasing React, Three.js, and creative frontend engineering.',
             numberOfItems: projects.length,
@@ -113,7 +117,7 @@ function buildJsonLd(globalInfo, projects, studio, awards, faqList) {
                     name: p.seoTitle || p.title,
                     description: p.seoDescription || p.description || '',
                     url: p.url || undefined,
-                    creator: { '@id': 'https://itomdev.com/#person' },
+                    creator: { '@id': 'https://portfolio.worldpeace.top/#person' },
                     ...(p.techStack && p.techStack.length > 0 ? {
                         keywords: p.techStack.map(t => TECH_STACK_NAMES[t] || t).join(', ')
                     } : {}),
@@ -126,11 +130,11 @@ function buildJsonLd(globalInfo, projects, studio, awards, faqList) {
             const projectSlug = p.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
             graph.push({
                 '@type': 'CreativeWork',
-                '@id': `https://itomdev.com/#project-${projectSlug}`,
+                '@id': `https://portfolio.worldpeace.top/#project-${projectSlug}`,
                 name: p.seoTitle || p.title,
                 description: p.seoDescription || p.description || '',
                 url: p.url || undefined,
-                creator: { '@id': 'https://itomdev.com/#person' },
+                creator: { '@id': 'https://portfolio.worldpeace.top/#person' },
                 ...(p.techStack && p.techStack.length > 0 ? {
                     keywords: p.techStack.map(t => TECH_STACK_NAMES[t] || t).join(', ')
                 } : {}),
@@ -153,66 +157,66 @@ function buildJsonLd(globalInfo, projects, studio, awards, faqList) {
 
                 graph.push({
                     '@type': 'VideoObject',
-                    '@id': `https://itomdev.com/#${studioSlug}`,
+                    '@id': `https://portfolio.worldpeace.top/#${studioSlug}`,
                     name: s.seoTitle || s.title,
                     description: s.seoDescription || s.description || '',
                     url: s.url || undefined,
                     contentUrl: s.url || undefined,
                     ...(embedUrl ? { embedUrl } : {}),
-                    thumbnailUrl: s.thumbnailUrl || 'https://itomdev.com/og-image.webp',
+                    thumbnailUrl: s.thumbnailUrl || 'https://portfolio.worldpeace.top/og-image.webp',
                     ...(s.duration ? { duration: `PT${s.duration.replace(':', 'M')}S` } : {}),
                     ...(s.date ? { uploadDate: formatIsoDate(s.date) } : {}),
                     ...(s.views ? { interactionStatistic: { '@type': 'InteractionCounter', interactionType: 'https://schema.org/WatchAction', userInteractionCount: s.views } } : {}),
-                    author: { '@id': 'https://itomdev.com/#person' },
+                    author: { '@id': 'https://portfolio.worldpeace.top/#person' },
                 });
             } else if (s.platform === 'blog') {
                 graph.push({
                     '@type': 'Article',
-                    '@id': `https://itomdev.com/#${studioSlug}`,
+                    '@id': `https://portfolio.worldpeace.top/#${studioSlug}`,
                     headline: s.seoTitle || s.title,
                     description: s.seoDescription || s.description || '',
                     url: s.url || undefined,
-                    image: s.thumbnailUrl || 'https://itomdev.com/og-image.webp',
+                    image: s.thumbnailUrl || 'https://portfolio.worldpeace.top/og-image.webp',
                     ...(s.date ? { datePublished: formatIsoDate(s.date) } : {}),
                     ...(s.readTime ? { timeRequired: `PT${s.readTime.replace(' min', '')}M` } : {}),
-                    author: { '@id': 'https://itomdev.com/#person' },
+                    author: { '@id': 'https://portfolio.worldpeace.top/#person' },
                 });
             } else if (s.platform === 'tiktok') {
                 graph.push({
                     '@type': 'VideoObject',
-                    '@id': `https://itomdev.com/#${studioSlug}`,
+                    '@id': `https://portfolio.worldpeace.top/#${studioSlug}`,
                     name: s.seoTitle || s.title,
                     description: s.seoDescription || s.description || '',
                     url: s.url || undefined,
                     contentUrl: s.url || undefined,
-                    thumbnailUrl: s.thumbnailUrl || 'https://itomdev.com/og-image.webp',
+                    thumbnailUrl: s.thumbnailUrl || 'https://portfolio.worldpeace.top/og-image.webp',
                     ...(s.date ? { uploadDate: formatIsoDate(s.date) } : {}),
                     ...(s.views ? { interactionStatistic: { '@type': 'InteractionCounter', interactionType: 'https://schema.org/WatchAction', userInteractionCount: s.views } } : {}),
                     ...(s.likes ? { aggregateRating: { '@type': 'AggregateRating', ratingCount: s.likes } } : {}),
-                    author: { '@id': 'https://itomdev.com/#person' },
+                    author: { '@id': 'https://portfolio.worldpeace.top/#person' },
                 });
             } else if (s.platform === 'instagram' || s.platform === 'x' || s.platform === 'linkedin') {
                 graph.push({
                     '@type': 'SocialMediaPosting',
-                    '@id': `https://itomdev.com/#${studioSlug}`,
+                    '@id': `https://portfolio.worldpeace.top/#${studioSlug}`,
                     headline: s.seoTitle || s.title,
                     description: s.seoDescription || s.description || '',
                     url: s.url || undefined,
-                    image: s.thumbnailUrl || 'https://itomdev.com/og-image.webp',
+                    image: s.thumbnailUrl || 'https://portfolio.worldpeace.top/og-image.webp',
                     ...(s.date ? { datePublished: formatIsoDate(s.date) } : {}),
                     ...(s.likes ? { interactionStatistic: { '@type': 'InteractionCounter', interactionType: 'https://schema.org/LikeAction', userInteractionCount: s.likes } } : {}),
-                    author: { '@id': 'https://itomdev.com/#person' },
+                    author: { '@id': 'https://portfolio.worldpeace.top/#person' },
                 });
             } else if (s.platform === 'codrops') {
                 graph.push({
                     '@type': 'Article',
-                    '@id': `https://itomdev.com/#${studioSlug}`,
+                    '@id': `https://portfolio.worldpeace.top/#${studioSlug}`,
                     headline: s.seoTitle || s.title,
                     description: s.seoDescription || s.description || '',
                     url: s.url || undefined,
-                    image: s.thumbnailUrl || 'https://itomdev.com/og-image.webp',
+                    image: s.thumbnailUrl || 'https://portfolio.worldpeace.top/og-image.webp',
                     ...(s.date ? { datePublished: formatIsoDate(s.date) } : {}),
-                    author: { '@id': 'https://itomdev.com/#person' },
+                    author: { '@id': 'https://portfolio.worldpeace.top/#person' },
                 });
             }
         });
@@ -223,7 +227,7 @@ function buildJsonLd(globalInfo, projects, studio, awards, faqList) {
         const categoryLabels = { sotd: 'Site of the Day', sotm: 'Site of the Month', other: 'Honorable Mention' };
         graph.push({
             '@type': 'ItemList',
-            '@id': 'https://itomdev.com/#awardslist',
+            '@id': 'https://portfolio.worldpeace.top/#awardslist',
             name: 'Web Design Awards received by Tomasz "ITom" Szmajda',
             numberOfItems: awards.length,
             itemListElement: awards.map((a, i) => ({
@@ -236,7 +240,7 @@ function buildJsonLd(globalInfo, projects, studio, awards, faqList) {
                     url: a.url || undefined,
                     description: a.seoDescription || undefined,
                     award: categoryLabels[a.category] || a.category,
-                    creator: { '@id': 'https://itomdev.com/#person' },
+                    creator: { '@id': 'https://portfolio.worldpeace.top/#person' },
                 }
             }))
         });
@@ -267,7 +271,7 @@ function buildLlmsTxt(globalInfo, projects, studio, awards, faqList) {
         content += `## Selected Portfolio Projects\n`;
         projects.forEach(p => {
             const tech = p.techStack ? ` (Tech: ${p.techStack.map(t => TECH_STACK_NAMES[t] || t).join(', ')})` : '';
-            content += `- [${p.seoTitle || p.title}](${p.url || 'https://itomdev.com'}): ${p.seoDescription || p.description || ''}${tech}\n`;
+            content += `- [${p.seoTitle || p.title}](${p.url || 'https://portfolio.worldpeace.top'}): ${p.seoDescription || p.description || ''}${tech}\n`;
         });
         content += `\n`;
     }
@@ -275,7 +279,7 @@ function buildLlmsTxt(globalInfo, projects, studio, awards, faqList) {
     if (studio && studio.length > 0) {
         content += `## Studio Content & Publications\n`;
         studio.forEach(s => {
-            content += `- [${s.seoTitle || s.title} (${s.platform})](${s.url || 'https://itomdev.com'}): ${s.seoDescription || s.description || ''}\n`;
+            content += `- [${s.seoTitle || s.title} (${s.platform})](${s.url || 'https://portfolio.worldpeace.top'}): ${s.seoDescription || s.description || ''}\n`;
         });
         content += `\n`;
     }
@@ -285,7 +289,7 @@ function buildLlmsTxt(globalInfo, projects, studio, awards, faqList) {
         const categoryLabels = { sotd: 'Site of the Day', sotm: 'Site of the Month', other: 'Honorable Mention' };
         awards.forEach(a => {
             const category = categoryLabels[a.category] || a.category;
-            content += `- **${category}** — [${a.seoTitle || a.title}](${a.url || 'https://itomdev.com'}): Awarded on ${a.date || 'unknown'}. ${a.seoDescription || ''}\n`;
+            content += `- **${category}** — [${a.seoTitle || a.title}](${a.url || 'https://portfolio.worldpeace.top'}): Awarded on ${a.date || 'unknown'}. ${a.seoDescription || ''}\n`;
         });
         content += `\n`;
     }
@@ -307,13 +311,16 @@ export function generateSeoHtml() {
     async function getLlmsContent() {
         if (!cachedLlmsContent) {
             try {
-                const [globalInfo, projects, studio, awards, faqList] = await Promise.all([
-                    sanityClient.fetch(`*[_id == "globalInfo"][0]`),
-                    sanityClient.fetch(`*[_type == "galleryProject"]`),
-                    sanityClient.fetch(`*[_type == "studioItem"]`),
-                    sanityClient.fetch(`*[_type == "awardCertificate"]`),
-                    sanityClient.fetch(`*[_type == "faq"]`)
-                ]);
+                let globalInfo = null, projects = null, studio = null, awards = null, faqList = null;
+                if (SANITY_ENABLED) {
+                    [globalInfo, projects, studio, awards, faqList] = await Promise.all([
+                        sanityClient.fetch(`*[_id == "globalInfo"][0]`),
+                        sanityClient.fetch(`*[_type == "galleryProject"]`),
+                        sanityClient.fetch(`*[_type == "studioItem"]`),
+                        sanityClient.fetch(`*[_type == "awardCertificate"]`),
+                        sanityClient.fetch(`*[_type == "faq"]`)
+                    ]);
+                }
                 cachedLlmsContent = buildLlmsTxt(globalInfo, projects, studio, awards, faqList);
             } catch (e) {
                 console.error('SEO Plugin Error: Failed to fetch Sanity data for llms.txt', e);
@@ -342,14 +349,17 @@ export function generateSeoHtml() {
         // This hook runs when Vite generates or serves index.html
         async transformIndexHtml(html) {
             try {
-                // Fetch all data in parallel
-                const [globalInfo, projects, studio, awards, faqList] = await Promise.all([
-                    sanityClient.fetch(`*[_id == "globalInfo"][0]`),
-                    sanityClient.fetch(`*[_type == "galleryProject"]`),
-                    sanityClient.fetch(`*[_type == "studioItem"] { ..., "thumbnailUrl": frontTexture.asset->url }`),
-                    sanityClient.fetch(`*[_type == "awardCertificate"]`),
-                    sanityClient.fetch(`*[_type == "faq"]`)
-                ]);
+                // Fetch all data in parallel（Sanity 停用时直接用兜底值）
+                let globalInfo = null, projects = null, studio = null, awards = null, faqList = null;
+                if (SANITY_ENABLED) {
+                    [globalInfo, projects, studio, awards, faqList] = await Promise.all([
+                        sanityClient.fetch(`*[_id == "globalInfo"][0]`),
+                        sanityClient.fetch(`*[_type == "galleryProject"]`),
+                        sanityClient.fetch(`*[_type == "studioItem"] { ..., "thumbnailUrl": frontTexture.asset->url }`),
+                        sanityClient.fetch(`*[_type == "awardCertificate"]`),
+                        sanityClient.fetch(`*[_type == "faq"]`)
+                    ]);
+                }
 
                 // Fallback values if globalInfo is not yet created in Sanity
                 const siteTitle = globalInfo?.siteTitle || 'Wolf (茶狼) | Full-Stack · Pentest · Security';

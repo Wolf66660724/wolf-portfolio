@@ -419,8 +419,8 @@ const AWARDS_DATA = {
         layout: 'certificate_grid',
         title: 'Featured Projects',
         items: [
-            { label: 'AI Security Lab', date: '2025-2026', image: '/textures/about/HIGHLIGHT_AI.webp', url: 'http://8.148.28.150:9137' },
-            { label: 'Personal Blog', date: '2025-2026', image: '/textures/about/HIGHLIGHT_BLOG.webp', url: 'http://worldpeace.top' },
+            { label: 'AI Security Lab', date: '2025-2026', image: '/textures/about/HIGHLIGHT_AI.webp', url: 'https://ai.worldpeace.top/' },
+            { label: 'Personal Blog', date: '2025-2026', image: '/textures/about/HIGHLIGHT_BLOG.webp', url: 'https://worldpeace.top' },
             { label: 'Pentest Toolkit', date: '2025-2026', image: '/textures/about/HIGHLIGHT_TOOLKIT.webp', url: 'https://github.com/Wolf66660724' },
             { label: 'Embedded Projects', date: '2024-2026', image: '/textures/about/HIGHLIGHT_EMBED.webp', url: 'https://github.com/Wolf66660724' },
         ],
@@ -435,10 +435,10 @@ const AWARDS_DATA = {
         layout: 'certificate_grid',
         title: 'Personal Strengths',
         items: [
-            { label: 'Tech Full-Stack', date: 'Security + Web + Embedded', image: '/textures/about/HIGHLIGHT_1.webp', url: 'http://worldpeace.top' },
-            { label: 'Hands-On', date: 'From app to hardware', image: '/textures/about/HIGHLIGHT_2.webp', url: 'http://worldpeace.top' },
-            { label: 'Fast Learner', date: 'Quick ramp-up', image: '/textures/about/HIGHLIGHT_3.webp', url: 'http://worldpeace.top' },
-            { label: 'Field Experience', date: 'Targets + real projects', image: '/textures/about/HIGHLIGHT_4.webp', url: 'http://worldpeace.top' },
+            { label: 'Tech Full-Stack', date: 'Security + Web + Embedded', image: '/textures/about/HIGHLIGHT_1.webp', url: 'https://worldpeace.top' },
+            { label: 'Hands-On', date: 'From app to hardware', image: '/textures/about/HIGHLIGHT_2.webp', url: 'https://worldpeace.top' },
+            { label: 'Fast Learner', date: 'Quick ramp-up', image: '/textures/about/HIGHLIGHT_3.webp', url: 'https://worldpeace.top' },
+            { label: 'Field Experience', date: 'Targets + real projects', image: '/textures/about/HIGHLIGHT_4.webp', url: 'https://worldpeace.top' },
         ],
         platformConfig: {
             label: 'STRENGTHS',
