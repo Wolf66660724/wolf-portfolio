@@ -170,33 +170,29 @@ const RAW_CONTENT_DATA = [
     },
 ];
 
-const ytTextures = ['/textures/studio/tvfront_filmikprojektdlamultiego.webp', '/textures/studio/tvfront_filmikedytowaniezdjec.webp'];
-const ytPaintedTextures = ['/textures/studio/tvfront_filmikprojektdlamultiego_painted.webp', '/textures/studio/tvfront_filmikedytowaniezdjec_painted.webp'];
+// 原本按 platform 分 youtube / blog / link / tiktok 四套贴图。
+// 其中 youtube 的 tvfront_filmik* 和 tiktok 的 phonefront_followmeontiktok*
+// 都是原作者的素材，而且没有任何条目在用（现在全是 link），已经删掉。
+// 剩下两套是 Wolf 自己的，blog 走博客图、其余一律走链接图。
 const blogTextures = ['/textures/studio/monitorfront_wolfblog.webp'];
 const linkTextures = ['/textures/studio/monitorfront_wolflinks.webp'];
 const blogPaintedTextures = ['/textures/studio/monitorfront_wolfblog_painted.webp'];
 const linkPaintedTextures = ['/textures/studio/monitorfront_wolflinks_painted.webp'];
-const ttTextures = ['/textures/studio/phonefront_followmeontiktok.webp'];
-const ttPaintedTextures = ['/textures/studio/phonefront_followmeontiktok_painted.webp'];
 
-let ytIdx = 0, blogIdx = 0, ttIdx = 0, linkIdx = 0;
-let ytPIdx = 0, blogPIdx = 0, ttPIdx = 0, linkPIdx = 0;
+let blogIdx = 0, linkIdx = 0;
+let blogPIdx = 0, linkPIdx = 0;
 
 export const CONTENT_DATA = RAW_CONTENT_DATA.map((item) => {
+    const front = item.platform === 'blog'
+        ? blogTextures[blogIdx++ % blogTextures.length]
+        : linkTextures[linkIdx++ % linkTextures.length];
+    const painted = item.platform === 'blog'
+        ? blogPaintedTextures[blogPIdx++ % blogPaintedTextures.length]
+        : linkPaintedTextures[linkPIdx++ % linkPaintedTextures.length];
     return {
         ...item,
-        frontTexture: item.frontTexture || (
-            item.platform === 'youtube' ? ytTextures[ytIdx++ % ytTextures.length] :
-                item.platform === 'blog' ? blogTextures[blogIdx++ % blogTextures.length] :
-                    item.platform === 'link' ? linkTextures[linkIdx++ % linkTextures.length] :
-                        ttTextures[ttIdx++ % ttTextures.length]
-        ),
-        paintedFrontTexture: item.paintedFrontTexture || (
-            item.platform === 'youtube' ? ytPaintedTextures[ytPIdx++ % ytPaintedTextures.length] :
-                item.platform === 'blog' ? blogPaintedTextures[blogPIdx++ % blogPaintedTextures.length] :
-                    item.platform === 'link' ? linkPaintedTextures[linkPIdx++ % linkPaintedTextures.length] :
-                        ttPaintedTextures[ttPIdx++ % ttPaintedTextures.length]
-        )
+        frontTexture: item.frontTexture || front,
+        paintedFrontTexture: item.paintedFrontTexture || painted
     };
 });
 
